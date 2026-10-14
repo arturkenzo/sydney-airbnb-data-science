@@ -24,10 +24,14 @@ O projeto segue rigorosamente o roteiro estruturado em 12 etapas:
    * Conversão de tipos de atributos monetários (remoção de símbolos cifrão `$` e vírgulas em `price`, `cleaning_fee`, `security_deposit`, etc.).
    * Conversão de booleanos (`t`/`f`) e cálculo da antiguidade do anfitrião (`host_since_days`).
    * Tratamento de valores ausentes (imputação com valor zero para taxas inexistentes e mediana/moda nas demais variáveis).
-   * Tratamento de *outliers* na variável alvo (`price`), filtrando entre os percentis 1% e 99% para evitar distorções nos regressores.
+   * Tratamento de *outliers* na variável alvo (`price`), filtrando entre os percentis 0,5% e 99,5% para evitar distorções nos regressores.
+   * **Verificação de outliers nas demais variáveis preditoras**, separando *erro de cadastro* de *cauda longa legítima*:
+     * **Erro de cadastro (remoção da linha):** inconsistências estruturais de cadastro, como `bedrooms > accommodates` (um quarto acomoda no mínimo 1 hóspede; havia um registro de 46 quartos para 1 hóspede).
+     * **Caudas legítimas preservadas:** `number_of_reviews`, `accommodates`, `minimum_nights`, `cleaning_fee`, `security_deposit` e as coordenadas geográficas **não** sofrem corte — um anúncio muito popular, uma casa muito grande ou uma estadia mínima longa são sinal, não ruído.
 3. **Análise Exploratória de Dados (EDA) & Estatística Descritiva:**
    * Distribuição de frequências e estatísticas descritivas (média, mediana, desvio padrão, quartis).
    * Visualização da distribuição de preços por categorias (`room_type`, `property_type`, `cancellation_policy`, `host_is_superhost`).
+   * **Boxplots** das mesmas variáveis dos histogramas (`price`, `accommodates`, `bedrooms`, `bathrooms`, `review_scores_rating`, `cleaning_fee`), com resumo numérico da mediana, quartis e IQR.
    * Matriz de correlação com *heatmap* e análise das variáveis com maior impacto no preço.
    * Mapa de calor geográfico de Sydney plotando latitude e longitude em função do valor da diária.
 4. **Divisão Treino/Teste Estratificada:**
